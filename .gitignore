@@ -1,0 +1,47 @@
+# ---------- 依赖 ----------
+node_modules/
+.pnpm-store/
+
+# ---------- 环境变量与密钥（只提交 .env.example / .dev.vars.example）----------
+.env
+.env.*
+!.env.example
+!.env.production
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.secret
+*.pem
+*.key
+
+# ---------- 构建产物 ----------
+dist/
+dist2/
+dist-check/
+.vercel/
+.wrangler/
+coverage/
+*.tsbuildinfo
+
+# ---------- 测试 / 运行时产物 ----------
+test-results/
+playwright-report/
+e2e/test-results/
+e2e/e2e-last.txt
+*.log
+
+# ---------- Supabase 本地 ----------
+supabase/.branches/
+supabase/.temp/
+
+# ---------- 编辑器 / 系统 ----------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ---------- 临时 ----------
+*.bak
+*.bak.txt
+vite.config.js.timestamp-*.mjs

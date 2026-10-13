@@ -1,0 +1,23 @@
+{
+  "name": "english-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "英语外教管理系统 · 公网版（Cloudflare Worker + Pages + Supabase）",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @cloud/web --filter @cloud/api dev",
+    "build": "pnpm --filter @cloud/web --filter @cloud/api build",
+    "test": "pnpm --filter @cloud/domain test && pnpm --filter @cloud/schema test && pnpm --filter @cloud/api test",
+    "test:web": "pnpm --filter @cloud/web test",
+    "lint": "pnpm --filter @cloud/web --filter @cloud/api --filter @cloud/domain --filter @cloud/schema lint",
+    "deploy:api": "pnpm --filter @cloud/api exec wrangler deploy",
+    "deploy:web": "pnpm --filter @cloud/web build && pnpm --filter @cloud/web exec wrangler pages deploy dist --project-name english-mgmt-web --branch main",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push"
+  }
+}

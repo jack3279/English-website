@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "routes/**/*.js": { "runtime": "nodejs20.x" }
+  },
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/routes/$1" }]
+}

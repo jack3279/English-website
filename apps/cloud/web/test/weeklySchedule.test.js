@@ -1,0 +1,4 @@
+import {test,expect} from 'vitest';import {expandWeekly} from '../src/lib/weeklySchedule.js';
+test('周一周三周五使用不同时间，两周生成六节北京时间课程',()=>{const rows=expandWeekly({startInput:'2026-10-12T09:00',weeks:2,slots:[{weekday:1,time:'09:00'},{weekday:3,time:'15:30'},{weekday:5,time:'20:00'}]});expect(rows).toEqual(['2026-10-12T01:00:00.000Z','2026-10-14T07:30:00.000Z','2026-10-16T12:00:00.000Z','2026-10-19T01:00:00.000Z','2026-10-21T07:30:00.000Z','2026-10-23T12:00:00.000Z']);});
+test('从周日开始两周的周一课不会少生成一周，也不会生成过去日期',()=>{expect(expandWeekly({startInput:'2026-10-18T16:00',weeks:2,slots:[{weekday:1,time:'09:00'}]})).toEqual(['2026-10-19T01:00:00.000Z','2026-10-26T01:00:00.000Z']);});
+test('隔周循环跨月仍保留选定时间',()=>{expect(expandWeekly({startInput:'2026-10-26T10:00',weeks:2,intervalWeeks:2,slots:[{weekday:1,time:'10:00'}]})).toEqual(['2026-10-26T02:00:00.000Z','2026-11-09T02:00:00.000Z']);});

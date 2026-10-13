@@ -1,0 +1,14 @@
+{
+  "name": "@cloud/schema",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "lint": "echo 'lint placeholder'"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  }
+}

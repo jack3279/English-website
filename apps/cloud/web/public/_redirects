@@ -1,0 +1,3 @@
+# Cloudflare Pages SPA 回落: 应用用 createBrowserRouter(browser history),
+# 直接访问/刷新 /admin/import 这类深链时, 静态托管需回落到 index.html, 否则 404。
+/*    /index.html   200

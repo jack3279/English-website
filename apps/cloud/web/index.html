@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>17say.org · 英语外教管理</title>
+    <script>
+      // 防 dark mode FOUC: 在 React 加载前根据 localStorage / OS 偏好加 class
+      (function () {
+        try {
+          var t = localStorage.getItem("v2_theme");
+          if (
+            t === "dark" ||
+            (!t && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)
+          ) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <main
+        id="boot-status"
+        class="flex min-h-dvh items-center justify-center bg-gray-50 p-6 dark:bg-gray-950"
+      >
+        <section
+          class="w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-card dark:bg-gray-900"
+          aria-live="polite"
+        >
+          <p class="text-sm font-semibold text-primary-700">17say.org · 教学管理</p>
+          <h1 id="boot-message" class="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            正在加载…
+          </h1>
+          <p id="boot-description" class="mt-2 text-sm text-gray-500">请稍候，正在打开工作空间。</p>
+          <button
+            id="boot-retry"
+            type="button"
+            hidden
+            class="mt-6 rounded-lg bg-primary-600 px-5 py-3 text-sm text-white"
+          >
+            重新加载
+          </button>
+          <noscript
+            ><p class="mt-4 text-sm text-gray-600">
+              请启用浏览器的 JavaScript 后使用教学管理系统。
+            </p></noscript
+          >
+        </section>
+      </main>
+    </div>
+    <script>
+      (function () {
+        function reportBootFailure(reason) {
+          if (
+            !document.getElementById("boot-status") ||
+            !document.getElementById("boot-retry").hidden
+          )
+            return;
+          console.error("Workspace startup failed:", reason);
+          document.getElementById("boot-message").textContent = "页面暂时无法打开";
+          document.getElementById("boot-description").textContent =
+            "请重新加载页面。如果问题持续，请联系管理员。";
+          document.getElementById("boot-retry").hidden = false;
+        }
+        document.getElementById("boot-retry").addEventListener("click", function () {
+          window.location.reload();
+        });
+        window.addEventListener(
+          "error",
+          function (event) {
+            if (event.error || (event.target && event.target.type === "module")) {
+              reportBootFailure(event.error || "Application script could not load");
+            }
+          },
+          true,
+        );
+        window.addEventListener("unhandledrejection", function (event) {
+          reportBootFailure(event.reason);
+        });
+        window.setTimeout(function () {
+          if (
+            !document.getElementById("boot-status") ||
+            !document.getElementById("boot-retry").hidden
+          )
+            return;
+          document.getElementById("boot-message").textContent = "加载时间较长";
+          document.getElementById("boot-description").textContent =
+            "请检查网络连接，或重新加载页面。";
+          document.getElementById("boot-retry").hidden = false;
+        }, 18000);
+      })();
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

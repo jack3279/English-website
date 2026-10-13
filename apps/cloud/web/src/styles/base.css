@@ -1,0 +1,484 @@
+/* 全局基座。token 以 design/design-system.css 为准, 这里只做落地。 */
+* {
+  box-sizing: border-box;
+}
+:root {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #0f766e;
+}
+
+body {
+  margin: 0;
+  /* 与 tailwind.config.js 的 fontFamily.sans 保持一致, 避免两处字体不同步 */
+  font-family:
+    "Inter",
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  /* design-system.css 的 --bg */
+  background: #f5f7fa;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 金额/课时这类数字用等宽数字 —— 不然后两位数永远对不齐, 一排数字看起来就是"乱" */
+.tabular-nums,
+table td,
+table th {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 键盘导航时才显示焦点环, 鼠标点击不显示(默认行为, 显式声明避免被覆盖) */
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 3px;
+}
+
+/* 细滚动条: Windows 默认滚动条很粗, 在浅色界面上很扎眼 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 手机角色界面参考用户提供的 H5 设计稿。 */
+.mobile-bottom-nav {
+  position: fixed;
+  z-index: 30;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 4px 0 calc(4px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 -2px 12px #0f172a08;
+}
+.mobile-tab {
+  display: flex;
+  flex: 1;
+  position: relative;
+  min-height: 56px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 0;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+.mobile-tab.is-active {
+  color: #0f766e;
+  background: transparent;
+}
+.mobile-tab.is-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 3px;
+  background: #0d9488;
+}
+.dark .mobile-tab.is-active {
+  color: #5eead4;
+}
+.home-intro {
+  padding: 24px;
+  border-radius: 20px;
+  background: #e9f7f4;
+  border: 1px solid #d3ede5;
+}
+.home-intro h2 {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.home-intro p {
+  color: #527267;
+}
+.dark .home-intro {
+  background: #102d29;
+  border-color: #20524a;
+}
+.dark .home-intro p {
+  color: #a4cfc5;
+}
+.role-home-columns {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .role-home-columns {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .home-intro {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+  .home-intro h2 {
+    font-size: 20px;
+  }
+  .role-home-columns {
+    gap: 20px;
+  }
+}
+.mobile-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  font-weight: 500;
+}
+.dark .mobile-bottom-nav,
+.dark .mobile-shortcut {
+  background: #111827;
+  border-color: #334155;
+}
+.lesson-design-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px;
+  background: white;
+}
+.dark .lesson-design-card {
+  background: #111827;
+  border-color: #334155;
+}
+.lesson-design-card.is-live {
+  border-color: #0d9488;
+}
+.lesson-design-card.is-cancelled {
+  opacity: 0.7;
+  border-style: dashed;
+}
+.teacher-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.teacher-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: white;
+  padding: 20px;
+  min-width: 0;
+}
+.teacher-metric strong {
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.teacher-metric span {
+  font-size: 12px;
+  color: #64748b;
+}
+.teacher-metric.teal {
+  background: #f0fdfa;
+  border-color: #ccfbf1;
+  color: #0f766e;
+}
+.teacher-metric.orange {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+}
+.dark .teacher-metric {
+  background: #111827;
+  border-color: #334155;
+}
+.dark .teacher-metric span,
+.dark .admin-mobile-stat span {
+  color: #9ca3af;
+}
+.dark .teacher-metric.teal {
+  color: #5eead4;
+}
+.dark .teacher-metric.orange {
+  color: #fdba74;
+}
+.dark .admin-mobile-stat.danger {
+  color: #fda4af;
+}
+@media (min-width: 768px) {
+  .mobile-bottom-nav {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .app-page-header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .school-chat-header {
+    height: calc(56px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .role-mobile .app-scroll {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+  .role-mobile .page-body {
+    padding: 16px;
+  }
+  .role-mobile .page-frame {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .role-mobile .page-body > section h2 {
+    font-size: 16px;
+  }
+  .teacher-metric {
+    padding: 16px 12px;
+  }
+  .teacher-metric strong {
+    font-size: 24px;
+  }
+  .teacher-summary {
+    gap: 8px;
+  }
+  .lesson-design-card {
+    padding: 16px;
+  }
+  .role-mobile table {
+    font-size: 12px;
+  }
+  .role-mobile th,
+  .role-mobile td {
+    padding: 12px 10px;
+  }
+  .role-mobile .payroll-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .role-mobile .payroll-metrics > :last-child {
+    background: #0d9488;
+    border-color: #0d9488;
+    color: white;
+  }
+  .role-mobile .payroll-metrics > :last-child * {
+    color: white;
+  }
+}
+
+@media (max-width: 767px) {
+  .role-mobile .mobile-profile header {
+    background: #0f766e;
+    border-color: #0f766e;
+  }
+  .role-mobile .mobile-profile header h1,
+  .role-mobile .mobile-profile header button[aria-label="打开菜单"],
+  .role-mobile .mobile-profile header button[aria-label="账号"],
+  .role-mobile .mobile-profile header button[aria-label="通知"],
+  .role-mobile .mobile-profile header button[aria-label^="切换到"],
+  .role-mobile .mobile-profile header .text-slate-500 {
+    color: white;
+  }
+  .role-mobile .mobile-profile header .text-gray-600 {
+    color: #ccfbf1;
+  }
+  .role-mobile .page-body > section > .rounded-xl {
+    border-radius: 18px;
+  }
+}
+
+.desktop-dashboard-grid {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+.desktop-lesson-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e8edf3;
+  border-radius: 14px;
+  background: #f8fafc;
+  transition: background 0.15s;
+}
+.desktop-lesson-row:hover {
+  background: #f0fdfa;
+}
+.dark .desktop-lesson-row {
+  background: #111827;
+  border-color: #334155;
+}
+.student-master-detail {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+.student-master-detail > * {
+  min-width: 0;
+}
+.student-preview {
+  display: none;
+}
+.selected-student-row {
+  background: #ccfbf1 !important;
+}
+.dark .selected-student-row {
+  background: #134e4a !important;
+}
+@media (min-width: 1100px) {
+  .desktop-dashboard-grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+  }
+}
+@media (min-width: 1280px) {
+  .student-master-detail {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .student-preview {
+    display: block;
+    position: sticky;
+    top: 92px;
+  }
+}
+
+.admin-mobile-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  min-width: 0;
+}
+.admin-mobile-stat strong {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.admin-mobile-stat span {
+  font-size: 10px;
+  color: #64748b;
+}
+.admin-mobile-stat.danger {
+  background: #fff1f2;
+  border-color: #ffe4e6;
+  color: #be123c;
+}
+.admin-mobile-todo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 14px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+.todo-stripe {
+  align-self: stretch;
+  min-height: 44px;
+  width: 4px;
+  border-radius: 4px;
+  background: #0d9488;
+}
+.admin-mobile-todo.danger .todo-stripe {
+  background: #ef4444;
+}
+.admin-mobile-todo.warning .todo-stripe {
+  background: #f97316;
+}
+.todo-count {
+  padding: 5px 8px;
+  border-radius: 20px;
+  background: #f0fdfa;
+  color: #0f766e;
+  font-size: 12px;
+}
+.admin-mobile-todo.danger .todo-count {
+  background: #ffe4e6;
+  color: #be123c;
+}
+.admin-mobile-todo.warning .todo-count {
+  background: #ffedd5;
+  color: #c2410c;
+}
+.dark .admin-mobile-stat,
+.dark .admin-mobile-todo {
+  background: #111827;
+  border-color: #334155;
+}
+@media (max-width: 767px) {
+  .admin-mobile-page > header {
+    background: #0f766e;
+    border-color: #0f766e;
+  }
+  .admin-mobile-page > header h1,
+  .admin-mobile-page > header button[aria-label="打开菜单"],
+  .admin-mobile-page > header button[aria-label="账号"],
+  .admin-mobile-page > header button[aria-label="通知"],
+  .admin-mobile-page > header button[aria-label^="切换到"],
+  .admin-mobile-page > header .text-slate-500 {
+    color: white;
+  }
+  .admin-mobile-page > header .text-gray-600 {
+    color: #ccfbf1;
+  }
+}
+
+.quick-search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  margin-bottom: 6px;
+}
+.quick-search-result:hover {
+  background: #f0fdfa;
+}
+.dark .quick-search-result {
+  background: #1f2937;
+}

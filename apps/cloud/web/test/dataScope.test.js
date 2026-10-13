@@ -1,0 +1,10 @@
+import {test,expect,afterEach} from 'vitest';
+import {setSession,clearSession} from '../src/lib/auth-store.js';
+import {getDataScope} from '../src/lib/dataScope.js';
+import {getNavigation} from '../src/layout/Navigation.jsx';
+afterEach(()=>{clearSession();localStorage.clear();});
+const login=user=>setSession({access_token:'test',refresh_token:null,user});
+test('formal administrator defaults to production and stores preferences per user',()=>{login({id:'a',role:'admin'});expect(getDataScope()).toBe('production');localStorage.setItem('data-scope:a','test');expect(getDataScope()).toBe('test');login({id:'b',role:'admin'});expect(getDataScope()).toBe('production');});
+test('test identities cannot select formal data',()=>{login({id:'a',role:'admin',is_test_account:true});localStorage.setItem('data-scope:a','production');expect(getDataScope()).toBe('test');});
+test('teacher cannot select test data with stored administrator preference',()=>{login({id:'t',role:'teacher'});localStorage.setItem('data-scope:t','test');expect(getDataScope()).toBe('production');});
+test('test navigation omits formal assistant, backups, import and historic renewal orders',()=>{login({id:'a',role:'admin',is_test_account:true});function paths(items){return items.flatMap(x=>x.items?paths(x.items):[x.to]);}const nav=paths(getNavigation('admin'));for(const p of ['/admin/backups','/admin/import','/admin/assistant','/renewals'])expect(nav).not.toContain(p);expect(nav).toContain('/admin/finance');expect(nav).toContain('/admin/accounts');});

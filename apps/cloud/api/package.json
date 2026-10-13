@@ -1,0 +1,23 @@
+{
+  "name": "@cloud/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "dev:vercel": "vercel dev --port 3001",
+    "build": "echo no-build-step",
+    "test": "node test/run.js",
+    "lint": "echo 'lint placeholder'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "@cloud/domain": "workspace:*",
+    "@cloud/schema": "workspace:*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "undici": "^6.20.0",
+    "vercel": "^37.0.0"
+  }
+}

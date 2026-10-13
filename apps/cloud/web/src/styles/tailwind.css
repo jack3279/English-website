@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#f5f7fa] text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100;
+  }
+  ::selection {
+    background: #99f6e4;
+    color: #134e4a;
+  }
+}
+
+@layer components {
+  .brand-panel {
+    background:
+      radial-gradient(900px 420px at 0% -20%, rgba(255, 255, 255, 0.18), transparent 55%),
+      linear-gradient(180deg, #15756c 0%, #0e564f 55%, #0c433e 100%);
+  }
+
+  .page-canvas {
+    @apply bg-[#f5f7fa] dark:bg-gray-950;
+  }
+
+  /* 顶栏和内容共用这一条。宽屏居中，左右留白对称，标题和卡片边对齐。 */
+  .page-frame {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-body {
+    @apply mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-6 sm:py-6 lg:px-8;
+  }
+
+  /* 没走 Table 组件的表格也用同一套表头、行高和悬停。 */
+  :where(.page-canvas) table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  :where(.page-canvas) thead th {
+    height: 3rem;
+    padding: 0 1.25rem;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    background: #f8fafc;
+    white-space: nowrap;
+  }
+  :where(.page-canvas) tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #eef2f6;
+  }
+  :where(.page-canvas) tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  :where(.page-canvas) tbody tr:hover {
+    background: rgba(241, 245, 249, 0.75);
+  }
+  :where(.dark .page-canvas) thead th {
+    color: #94a3b8;
+    background: rgba(30, 41, 59, 0.45);
+  }
+  :where(.dark .page-canvas) tbody td {
+    border-bottom-color: #1e293b;
+  }
+  :where(.dark .page-canvas) tbody tr:hover {
+    background: rgba(30, 41, 59, 0.45);
+  }
+
+  .list-toolbar {
+    @apply flex flex-wrap items-center gap-3 border-b border-slate-200/70 bg-white px-5 py-4 dark:border-gray-800 dark:bg-gray-900;
+  }
+  .list-footer {
+    @apply flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-gray-800 dark:text-gray-400;
+  }
+  .data-table-shell {
+    scrollbar-gutter: stable;
+  }
+  .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .data-table[data-mobile-cards="true"] {
+    display: block;
+    min-width: 0;
+  }
+  .data-table[data-mobile-cards="true"] thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .data-table[data-mobile-cards="true"] tbody {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+  }
+  .dark .data-table[data-mobile-cards="true"] tbody {
+    background: #020617;
+  }
+  .data-table[data-mobile-cards="true"] tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px 16px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+  }
+  .dark .data-table[data-mobile-cards="true"] tbody tr {
+    background: #0f172a;
+    border-color: #1e293b;
+  }
+  .data-table[data-mobile-cards="true"][data-mobile-columns="3"] tbody tr {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+  .data-table[data-mobile-cards="true"] tbody td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 0;
+    max-width: 100%;
+    width: auto;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .data-table[data-mobile-cards="true"] tbody td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+  }
+  .dark .data-table[data-mobile-cards="true"] tbody td::before {
+    color: #94a3b8;
+  }
+  .data-table[data-mobile-cards="true"] tbody td:first-child,
+  .data-table[data-mobile-cards="true"] tbody td[colspan],
+  .data-table[data-mobile-cards="true"] tbody td[data-label="操作"] {
+    grid-column: 1 / -1;
+  }
+  .data-table[data-mobile-cards="true"] tbody td:first-child::before,
+  .data-table[data-mobile-cards="true"] tbody td[data-label="操作"]::before {
+    display: none;
+  }
+  .data-table[data-mobile-cards="true"] tbody td[data-label="操作"] {
+    align-items: flex-end;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+  }
+}

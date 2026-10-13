@@ -1,0 +1,6 @@
+# Supabase
+.branches
+.temp
+
+# Local seed users (don't commit)
+/seed-users.local.json

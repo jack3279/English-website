@@ -1,0 +1,42 @@
+
+
+name = "english-mgmt-api"
+main = "src/worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# 自定义域: api.17say.org (worker 内部按 path dispatch: /auth/login, /me, etc)
+# 根域 17say.org 给 web 用 (Cloudflare Pages)
+[[routes]]
+pattern = "api.17say.org"
+custom_domain = true
+
+# Secrets 用 wrangler secret put <NAME> 设置, 不写进本文件
+# - SUPABASE_URL
+# - SUPABASE_SERVICE_ROLE_KEY
+# - SUPABASE_ANON_KEY
+# - ENCRYPTION_KEY (32 字节随机密钥的 Base64，用于私有配置加密)
+#   兼容旧名 PUSHPLUS_ENCRYPTION_KEY；两者同时存在时以 ENCRYPTION_KEY 为准
+
+[vars]
+LOG_LEVEL = "info"
+CORS_ORIGIN = "https://17say.org,https://www.17say.org"
+
+# 定时任务 (UTC; 北京时间见右侧注释)
+[triggers]
+crons = [
+  "0 0 * * *",    # 北京 08:00  保活, 防 Supabase 7 天不活跃被暂停
+  "0 1 * * *",    # 北京 09:00  续费提醒: 课时快用完 / 快到期 -> 家长站内通知 + 企微
+  "30 13 * * *",  # 北京 21:30  次日课节提醒 -> 站内通知 + 企微
+  "30 18 * * *",   # 北京 02:30  每日数据导出 JSON 到 R2
+  "* * * * *"    # 管理员机器人检查消息；未配置或暂停时不连接外部服务
+]
+
+[[r2_buckets]]
+binding = "BACKUP_BUCKET"
+bucket_name = "etm-backup"
+
+[[services]]
+binding = "ADMIN_BOT_WORKER"
+service = "english-mgmt-api"
+entrypoint = "AdminBotRunner"

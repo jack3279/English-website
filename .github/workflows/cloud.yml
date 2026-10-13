@@ -1,0 +1,55 @@
+name: cloud
+on:
+  pull_request:
+    paths:
+      - 'apps/cloud/**'
+      - 'packages/**'
+      - 'supabase/**'
+      - '.github/workflows/cloud.yml'
+      - 'pnpm-lock.yaml'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/cloud/**'
+      - 'packages/**'
+      - 'supabase/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      SUPABASE_URL: http://127.0.0.1:54321
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:cloud
+      - run: pnpm --filter @cloud/web lint
+      - run: pnpm --filter @cloud/web build
+      - name: Supabase CLI install
+        run: |
+          curl -fsSL https://supabase.com/install.sh | sh
+          echo "$PWD/bin" >> $GITHUB_PATH
+      - name: Supabase start
+        run: supabase start
+      - name: Run pgTAP tests
+        run: supabase test db

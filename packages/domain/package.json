@@ -1,0 +1,11 @@
+{
+  "name": "@cloud/domain",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "lint": "echo 'lint placeholder'"
+  }
+}

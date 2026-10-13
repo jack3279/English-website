@@ -1,0 +1,5 @@
+﻿packages:
+  - 'apps/cloud/*'
+  - 'packages/*'
+  - 'supabase/scripts'
+  - 'e2e'

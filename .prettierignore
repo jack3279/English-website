@@ -1,0 +1,9 @@
+dist
+dist-check
+release
+release-installer
+node_modules
+data
+coverage
+package-lock.json
+**/*.min.js

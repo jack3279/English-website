@@ -1,0 +1,4 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {setMockResults}=require('./setup.js');
+const canonical=require('../lib/payrollReport.js'),legacy=require('../lib/legacyPayrollReport.js');
+test('旧月结使用完整北京时间月份和冻结币种，跨币种总额不相加',async(t)=>{let params;t.mock.method(canonical,'report',async(req,p)=>{params=p;return{rows:[{month:'2026-10-01',pay_currency:'USD',pay_amount:20},{month:'2026-10-01',pay_currency:'PHP',pay_amount:350}],totals:{teachers:1,hours:2,by_currency:{USD:20,PHP:350}},pending_absences:0};});setMockResults([{data:[],error:null}]);const r=await legacy.build({context:{role:'admin'}},'2026-10-15','2026-10-15');assert.equal(params.get('from'),'2026-10-01');assert.equal(params.get('to'),'2026-10-31');assert.equal(r.totals.pay_amount,null);assert.deepEqual(r.totals.by_currency,{USD:20,PHP:350});});

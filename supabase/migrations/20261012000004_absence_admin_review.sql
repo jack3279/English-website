@@ -1,0 +1,10 @@
+begin;
+alter table public.lessons add column if not exists absence_review_status text;
+alter table public.lessons add column if not exists absence_deduct_hours boolean;
+alter table public.lessons add column if not exists absence_pay_teacher boolean;
+alter table public.lessons add column if not exists absence_reviewed_by uuid references public.profiles(id);
+alter table public.lessons add column if not exists absence_reviewed_at timestamptz;
+do $$ begin if not exists(select 1 from pg_constraint where conname='lessons_absence_review_status_check') then alter table public.lessons add constraint lessons_absence_review_status_check check(absence_review_status is null or absence_review_status in ('pending','confirmed'));end if;end $$;
+create index if not exists lessons_pending_absence_review on public.lessons(is_test,scheduled_at) where absence_review_status='pending';
+notify pgrst,'reload schema';
+commit;

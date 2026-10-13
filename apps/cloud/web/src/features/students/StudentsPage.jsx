@@ -80,6 +80,7 @@ export default function StudentsPage() {
       qc.invalidateQueries({
         queryKey: ["students"]
       });
+      qc.invalidateQueries({ queryKey: ["student-status-counts"] });
       setEditTarget(null);
       toast.success(uiT("学员已创建，请完善家长账号关联"));
       if (response.data?.id) navigate(`/students/${response.data.id}`);
@@ -98,24 +99,11 @@ export default function StudentsPage() {
       qc.invalidateQueries({
         queryKey: ["students"]
       });
+      qc.invalidateQueries({ queryKey: ["student-status-counts"] });
       setEditTarget(null);
       toast.success(uiT("学员已更新"));
     },
     onError: e => toast.error(e?.message || uiT("更新失败"))
-  });
-  // “设为停课”走状态 PATCH；永久删除在 DeleteStudentDialog 里二次确认后单独处理。
-  const suspendMut = useMutation({
-    mutationFn: id => http(`/students/${id}`, {
-      method: "PATCH",
-      body: { status: "inactive" }
-    }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["students"] });
-      qc.invalidateQueries({ queryKey: ["student-status-counts"] });
-      setEditTarget(null);
-      toast.success(uiT("学员已停课"));
-    },
-    onError: e => toast.error(e?.message || uiT("操作失败"))
   });
   const statusCount = status => counts?.[status] ?? students.filter(s => s.status === status).length;
   const allCount = counts?.all ?? students.length;
@@ -262,7 +250,7 @@ export default function StudentsPage() {
         id: editTarget.id,
         body
       });
-    }} onSuspend={editTarget !== "new" && isAdmin && editTarget.status !== "inactive" ? () => suspendMut.mutate(editTarget.id) : null} onPurge={editTarget !== "new" && isAdmin ? () => setPurgeTarget(editTarget) : null} submitting={createMut.isPending || updateMut.isPending || suspendMut.isPending} err={createMut.error || updateMut.error} />}
+    }} onPurge={editTarget !== "new" && isAdmin ? () => setPurgeTarget(editTarget) : null} submitting={createMut.isPending || updateMut.isPending} err={createMut.error || updateMut.error} />}
 
       {purgeTarget && <DeleteStudentDialog student={purgeTarget} onClose={() => setPurgeTarget(null)} onDeleted={() => {
         setPurgeTarget(null);
@@ -276,7 +264,6 @@ function StudentFormModal({
   initial,
   onClose,
   onSubmit,
-  onSuspend,
   onPurge,
   submitting,
   err
@@ -291,9 +278,6 @@ function StudentFormModal({
   });
   return <Dialog open onClose={onClose} title={initial ? uiT("编辑学员") : uiT("新建学员")} description={initial ? initial.full_name : undefined} footer={<>
           <div className="mr-auto flex items-center gap-2">
-            {onSuspend && <Button variant="outline" size="sm" onClick={() => {
-        if (confirm(uiT("确定将该学员停课吗？停课后排课与提醒都会停止，可随时改回在读。"))) onSuspend();
-      }}>{" " + uiT("设为停课") + " "}</Button>}
             {onPurge && <Button variant="destructive" size="sm" onClick={() => {
         onPurge();
         onClose();

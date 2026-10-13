@@ -105,11 +105,19 @@ test("导出的状态列为中文文案（休学/结课等）", async () => {
   expect(statusFn(rows[16])).toBe("停课");
 });
 
-test("admin 编辑弹窗里有「设为停课」和「永久删除」入口", async () => {
+test("编辑弹窗不再有独立的「设为停课」按钮，停课通过状态下拉选择", async () => {
   renderPage();
   fireEvent.click(screen.getByRole("button", { name: "编辑学生1" }));
-  expect(await screen.findByRole("button", { name: "设为停课" })).toBeInTheDocument();
-  const purge = screen.getByRole("button", { name: /永久删除/ });
+  await waitFor(() => expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument());
+  expect(screen.queryByRole("button", { name: "设为停课" })).not.toBeInTheDocument();
+  // 状态下拉本身提供停课等五种状态
+  expect(screen.getByRole("option", { name: "停课" })).toBeInTheDocument();
+});
+
+test("admin 编辑弹窗保留「永久删除」入口", async () => {
+  renderPage();
+  fireEvent.click(screen.getByRole("button", { name: "编辑学生1" }));
+  const purge = await screen.findByRole("button", { name: /永久删除/ });
   expect(purge).toBeInTheDocument();
   // 点击后关闭编辑弹窗并打开独立的删除弹窗
   fireEvent.click(purge);
@@ -118,11 +126,10 @@ test("admin 编辑弹窗里有「设为停课」和「永久删除」入口", as
   );
 });
 
-test("非 admin 编辑弹窗不显示停课与永久删除入口", async () => {
+test("非 admin 编辑弹窗不显示永久删除入口", async () => {
   state.role = "teacher";
   renderPage();
   fireEvent.click(screen.getByRole("button", { name: "编辑学生1" }));
   await waitFor(() => expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument());
-  expect(screen.queryByRole("button", { name: "设为停课" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: /永久删除/ })).not.toBeInTheDocument();
 });
